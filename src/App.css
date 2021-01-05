@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+button {
+  color: white;
+}
+
 pre {
   margin-top: 20px;
 }
