@@ -1,51 +1,37 @@
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import './App.css';
 
-// if you need to set the calculation of some function
-// you can write it to useState like value 
-// const getRandomValue = () => {
-//   console.log('...calcilation');
-//   return +Math.random(0, 1).toFixed(2);
-// }
-
 function App() {
-  // const [counter, setCounter] = useState(() => getRandomValue());
-  const [counter, setCounter] = useState(0);
-  const [values, setValues] = useState({
-    title: 'Счетчик',
-    date: Date.now(),
+  const [value, setValue] = useState('initial');
+
+  // Count rerendering of the component
+  const renderCount = useRef(1);
+  // Create ref on DOM element
+  const inputRef = useRef(null);
+  // Let you to know previous value of any state value --> useEffect + updating previous value (s. 20)
+  const prevValue = useRef('');
+
+  useEffect(() => {
+    renderCount.current++;
+    console.log(inputRef)
   });
 
-  const increaseValue = (evt) => {
-    evt.preventDefault();
+  useEffect(() => {
+    prevValue.current = value;
+  }, [value]);
 
-    setCounter(counter + 1);
+  const focus = () => {
+    return inputRef.current.focus();
   };
-
-  const decreaseValue = (evt) => {
-    evt.preventDefault();
-
-    setCounter(counter - 1);
-  };
-
-  const changeTitle = (evt) => {
-    evt.preventDefault();
-
-    setValues({
-      ...values,
-      title: 'Новый счетчик',
-    });
-  }
 
   return (
     <div className="App">
-      <h1>Счетчик: {counter}</h1>
+      <h1>Количество рендеров компонента: {renderCount.current}</h1>
+      <h2>Прошлое состояние: {prevValue.current}</h2>
 
-      <button className="btn btn-danger" type="button" onClick={decreaseValue}>Уменьшить</button>
-      <button className="btn btn-success" type="button" onClick={increaseValue}>Увеличить</button>
+      <input type="text" value={value} ref={inputRef} onChange={(evt) => setValue(evt.target.value)} />
 
-      <button className="btn btn-default" type="button" onClick={changeTitle}>Изменить заголовок</button>
-      <pre>{JSON.stringify(values)}</pre>
+      <button className="btn btn-success" type="button" onClick={focus}>Нажать</button>
     </div>
   );
 }
