@@ -1,51 +1,27 @@
-import React, {useState} from 'react';
-import './App.css';
-
-// if you need to set the calculation of some function
-// you can write it to useState like value 
-// const getRandomValue = () => {
-//   console.log('...calcilation');
-//   return +Math.random(0, 1).toFixed(2);
-// }
+import React, {useCallback, useState} from "react";
+import "./App.css";
+import ListItems from "./ListItems";
 
 function App() {
-  // const [counter, setCounter] = useState(() => getRandomValue());
-  const [counter, setCounter] = useState(0);
-  const [values, setValues] = useState({
-    title: 'Счетчик',
-    date: Date.now(),
-  });
+  const [count, setCount] = useState(1);
+  const [colored, setColored] = useState(false);
 
-  const increaseValue = (evt) => {
-    evt.preventDefault();
-
-    setCounter(counter + 1);
+  const titleStyle = {
+    color: colored ? "green" : "orange",
   };
 
-  const decreaseValue = (evt) => {
-    evt.preventDefault();
-
-    setCounter(counter - 1);
-  };
-
-  const changeTitle = (evt) => {
-    evt.preventDefault();
-
-    setValues({
-      ...values,
-      title: 'Новый счетчик',
-    });
-  }
+  const generateItemsFromApi = useCallback(() => {
+    return new Array(count).fill('').map((_, i) => `Елемент ${i + 1}`);
+  }, [count]);
 
   return (
     <div className="App">
-      <h1>Счетчик: {counter}</h1>
+      <h1 style={titleStyle}>Количество элементов: {count}</h1>
 
-      <button className="btn btn-danger" type="button" onClick={decreaseValue}>Уменьшить</button>
-      <button className="btn btn-success" type="button" onClick={increaseValue}>Увеличить</button>
+      <button className="btn btn-success" type="button" onClick={() => setCount(count + 1)}>Увеличить</button>
+      <button className="btn btn-warning" type="button" onClick={() => setColored(prev => !prev)}>Изменить</button>
 
-      <button className="btn btn-default" type="button" onClick={changeTitle}>Изменить заголовок</button>
-      <pre>{JSON.stringify(values)}</pre>
+      <ListItems getItems={generateItemsFromApi} />
     </div>
   );
 }
