@@ -2,13 +2,14 @@ import React from 'react';
 import {useAlert} from "./AlertContext";
 
 function Alert() {
-  const {alertStatus: alert, toggleAlert} = useAlert();
+  const {alert, hide} = useAlert();
+  const {status, text} = alert;
 
-  if (!alert) return null; 
+  if (!status) return null; 
 
   return (
-    <div className="alert alert-danger" onClick={toggleAlert}>
-      Это очень важное сообщение
+    <div className="alert alert-danger" onClick={hide}>
+      {text}
     </div>
   );
 }
